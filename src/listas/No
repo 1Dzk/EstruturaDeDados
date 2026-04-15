@@ -1,0 +1,11 @@
+package listas;
+
+public class No {
+    public int dado; // Use "dado" como está no seu print
+    public No proximo;
+
+    public No(int dado) {
+        this.dado = dado;
+        this.proximo = null;
+    }
+}
