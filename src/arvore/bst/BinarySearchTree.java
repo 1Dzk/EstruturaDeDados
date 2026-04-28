@@ -20,9 +20,7 @@ public class BinarySearchTree {
 
     public void inserir(int valor) {
         limparConsole();
-        System.out.println("\n--- Inserindo valor: " + valor + " ---");
         this.raiz = inserirRecursivo(raiz, valor);
-        exibir(); // Mostra a estrutura após cada inserção
     }
 
     private Node inserirRecursivo(Node atual, int valor) {
@@ -44,29 +42,80 @@ public class BinarySearchTree {
         return atual;
     }
 
-    public void exibir() {
-        desenharArvore(raiz, "", true);
+    public int getNoNivel(int valor) {
+        return buscarNivelRecursivo(raiz, valor, 0);
     }
 
-    private void desenharArvore(Node no, String prefixo, boolean eUltimo) {
-        if (no != null) {
-            System.out.print(prefixo);
+    private int buscarNivelRecursivo(Node atual, int valor, int nivel) {
+        if (atual == null) return -1; // Não encontrado
+        if (atual.valor == valor) return nivel;
+        return valor < atual.valor
+                ? buscarNivelRecursivo(atual.esquerda, valor, nivel + 1)
+                : buscarNivelRecursivo(atual.direita, valor, nivel + 1);
+    }
 
-            // Define o caractere do galho
-            System.out.print(eUltimo ? "└── " : "├── ");
+    public Node buscar(int valor) {
+        return buscarRecursivo(raiz, valor);
+    }
 
-            // Imprime o valor do nó
-            System.out.println(no.valor);
-
-            // Atualiza o prefixo para os próximos níveis
-            String novoPrefixo = prefixo + (eUltimo ? "    " : "│   ");
-
-            // Chamada recursiva para os filhos (direita primeiro para visualização vertical ficar intuitiva)
-            // Ou esquerda e direita para visualização padrão
-            if (no.esquerda != null || no.direita != null) {
-                desenharArvore(no.esquerda, novoPrefixo, no.direita == null);
-                desenharArvore(no.direita, novoPrefixo, true);
-            }
+    private Node buscarRecursivo(Node atual, int valor) {
+        if (atual == null || atual.valor == valor) {
+            return atual;
         }
+        return valor < atual.valor
+                ? buscarRecursivo(atual.esquerda, valor)
+                : buscarRecursivo(atual.direita, valor);
     }
+
+    public boolean eFolha(int valor) {
+        Node no = buscar(valor);
+        // Um nó é folha se ele existe e não tem nenhum filho
+        return no != null && no.esquerda == null && no.direita == null;
+    }
+
+    public void remover(int valor) {
+        this.raiz = removerRecursivo(raiz, valor);
+    }
+
+    private Node removerRecursivo(Node atual, int valor) {
+        if (atual == null) return null;
+
+        // 1. Navegação até encontrar o nó
+        if (valor < atual.valor) {
+            atual.esquerda = removerRecursivo(atual.esquerda, valor);
+        } else if (valor > atual.valor) {
+            atual.direita = removerRecursivo(atual.direita, valor);
+        }
+        // 2. Nó encontrado!
+        else {
+            // Caso A e B: Nó com um filho ou nenhum (folha)
+            if (atual.esquerda == null) return atual.direita;
+            if (atual.direita == null) return atual.esquerda;
+
+            // Caso C: Nó com dois filhos
+            // Buscamos o menor valor do lado direito (sucessor)
+            atual.valor = encontrarMinimo(atual.direita);
+
+            // Removemos o sucessor da subárvore direita
+            atual.direita = removerRecursivo(atual.direita, atual.valor);
+        }
+        return atual;
+    }
+
+    private int encontrarMinimo(Node no) {
+        int minimo = no.valor;
+        while (no.esquerda != null) {
+            minimo = no.esquerda.valor;
+            no = no.esquerda;
+        }
+        return minimo;
+    }
+
+    public int getValorRaiz() {
+        if (this.raiz == null) {
+            throw new RuntimeException("A árvore está vazia!");
+        }
+        return this.raiz.valor;
+    }
+
 }

@@ -1,5 +1,6 @@
 package listas;
 
+
 public class Lista {
     No primeiro;
 
