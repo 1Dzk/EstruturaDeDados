@@ -108,6 +108,7 @@ class BinarySearchTreeTest {
 
         System.out.println("✅ Nova raiz confirmada: " + arvore.getValorRaiz());
     }
+
     @Test
     void testeExcluirRaizAteEsvaziar() {
         // 1. Insere apenas um elemento
@@ -135,4 +136,15 @@ class BinarySearchTreeTest {
         assertNull(arvore.buscar(44)); // O 44 sumiu de vez
     }
 
+    @Test
+    void testeCaminhamentos() {
+        insere(); // 44, 33, 22, 25, 55, 52
+
+        System.out.println("\n--- Validando ordens de percurso ---");
+
+        // Teste visual no console
+        arvore.caminhar(TipoCaminho.IN_ORDER);   // Esperado: 22 25 33 44 52 55
+        arvore.caminhar(TipoCaminho.PRE_ORDER);  // Esperado: 44 33 22 25 55 52
+        arvore.caminhar(TipoCaminho.POS_ORDER);  // Esperado: 25 22 33 52 55 44
+    }
 }

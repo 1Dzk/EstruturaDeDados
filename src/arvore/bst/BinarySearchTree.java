@@ -118,4 +118,41 @@ public class BinarySearchTree {
         return this.raiz.valor;
     }
 
-}
+    public void caminhar(TipoCaminho tipo) {
+        System.out.print("Caminhamento " + tipo + ": ");
+        switch (tipo) {
+            case IN_ORDER -> caminharInOrder(raiz);
+            case PRE_ORDER -> caminharPreOrder(raiz);
+            case POS_ORDER -> caminharPosOrder(raiz);
+        }
+        System.out.println(); // Quebra de linha ao final
+    }
+
+    // 1. Esquerda -> Raiz -> Direita (Retorna os números em ordem crescente)
+    private void caminharInOrder(Node atual) {
+        if (atual != null) {
+            caminharInOrder(atual.esquerda);
+            System.out.print(atual.valor + " ");
+            caminharInOrder(atual.direita);
+        }
+    }
+
+    // 2. Raiz -> Esquerda -> Direita (Útil para copiar a árvore)
+    private void caminharPreOrder(Node atual) {
+        if (atual != null) {
+            System.out.print(atual.valor + " ");
+            caminharPreOrder(atual.esquerda);
+            caminharPreOrder(atual.direita);
+        }
+    }
+
+    // 3. Esquerda -> Direita -> Raiz (Útil para deletar a árvore ou calcular espaços)
+    private void caminharPosOrder(Node atual) {
+        if (atual != null) {
+            caminharPosOrder(atual.esquerda);
+            caminharPosOrder(atual.direita);
+            System.out.print(atual.valor + " ");
+        }
+    }
+
+    }
