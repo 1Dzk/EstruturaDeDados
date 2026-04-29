@@ -1,5 +1,10 @@
 package arvore.bst;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static arvore.bst.TipoCaminho.*;
+
 public class BinarySearchTree {
 
     private Node raiz;
@@ -24,21 +29,41 @@ public class BinarySearchTree {
     }
 
     private Node inserirRecursivo(Node atual, int valor) {
-        // 1. Se chegamos em um lugar vazio, criamos o nó aqui
-        if (atual == null) {
-            return new Node(valor);
-        }
+        if (atual == null) return new Node(valor);
 
-        // 2. Se o valor for menor, "andamos" para a esquerda
         if (valor < atual.valor) {
             atual.esquerda = inserirRecursivo(atual.esquerda, valor);
-        }
-        // 3. Se o valor for maior, "andamos" para a direita
-        else if (valor > atual.valor) {
+        } else if (valor > atual.valor) {
             atual.direita = inserirRecursivo(atual.direita, valor);
+        } else {
+            return atual; // Valores duplicados não permitidos
         }
 
-        // Retorna o nó (sem alterações para os pais na subida da recursão)
+        // --- INÍCIO DO BALANCEAMENTO ---
+        int fe = atual.getFatorEquilibrio();
+
+        // Caso 1: Rotação Simples à Direita
+        if (fe > 1 && valor < atual.esquerda.valor) {
+            return rotacionarDireita(atual);
+        }
+
+        // Caso 2: Rotação Simples à Esquerda
+        if (fe < -1 && valor > atual.direita.valor) {
+            return rotacionarEsquerda(atual);
+        }
+
+        // Caso 3: Rotação Dupla à Direita (Esquerda-Direita)
+        if (fe > 1 && valor > atual.esquerda.valor) {
+            atual.esquerda = rotacionarEsquerda(atual.esquerda);
+            return rotacionarDireita(atual);
+        }
+
+        // Caso 4: Rotação Dupla à Esquerda (Direita-Esquerda)
+        if (fe < -1 && valor < atual.direita.valor) {
+            atual.direita = rotacionarDireita(atual.direita);
+            return rotacionarEsquerda(atual);
+        }
+
         return atual;
     }
 
@@ -67,6 +92,23 @@ public class BinarySearchTree {
                 : buscarRecursivo(atual.direita, valor);
     }
 
+    private Node rotacionarDireita(Node y) {
+        Node x = y.esquerda;
+        Node T2 = x.direita;
+        x.direita = y;
+        y.esquerda = T2;
+        return x; // Nova raiz do sub-ramo
+    }
+
+    // Rotação à Esquerda (Caso Direita-Direita)
+    private Node rotacionarEsquerda(Node x) {
+        Node y = x.direita;
+        Node T2 = y.esquerda;
+        y.esquerda = x;
+        x.direita = T2;
+        return y; // Nova raiz do sub-ramo
+    }
+
     public boolean eFolha(int valor) {
         Node no = buscar(valor);
         // Um nó é folha se ele existe e não tem nenhum filho
@@ -78,26 +120,48 @@ public class BinarySearchTree {
     }
 
     private Node removerRecursivo(Node atual, int valor) {
+        // 1. Remoção padrão de BST
         if (atual == null) return null;
 
-        // 1. Navegação até encontrar o nó
         if (valor < atual.valor) {
             atual.esquerda = removerRecursivo(atual.esquerda, valor);
         } else if (valor > atual.valor) {
             atual.direita = removerRecursivo(atual.direita, valor);
+        } else {
+            // Encontrou o nó a remover!
+            if (atual.esquerda == null || atual.direita == null) {
+                // Caso com 1 filho ou nenhum
+                atual = (atual.esquerda == null) ? atual.direita : atual.esquerda;
+            } else {
+                // Caso com 2 filhos: sucessor (menor da direita)
+                atual.valor = encontrarMinimo(atual.direita);
+                atual.direita = removerRecursivo(atual.direita, atual.valor);
+            }
         }
-        // 2. Nó encontrado!
-        else {
-            // Caso A e B: Nó com um filho ou nenhum (folha)
-            if (atual.esquerda == null) return atual.direita;
-            if (atual.direita == null) return atual.esquerda;
 
-            // Caso C: Nó com dois filhos
-            // Buscamos o menor valor do lado direito (sucessor)
-            atual.valor = encontrarMinimo(atual.direita);
+        // Se a árvore ficou vazia após a remoção
+        if (atual == null) return null;
 
-            // Removemos o sucessor da subárvore direita
-            atual.direita = removerRecursivo(atual.direita, atual.valor);
+        // --- REBALANCEAMENTO AVL ---
+        int fe = atual.getFatorEquilibrio();
+
+        // Caso Esquerda-Esquerda ou Esquerda-Direita
+        if (fe > 1) {
+            if (atual.esquerda.getFatorEquilibrio() >= 0) {
+                return rotacionarDireita(atual); // Rotação simples
+            } else {
+                atual.esquerda = rotacionarEsquerda(atual.esquerda);
+                return rotacionarDireita(atual); // Rotação dupla
+            }
+            if (fe < -1) {
+                if (atual.direita.getFatorEquilibrio() <= 0) {
+                    return rotacionarEsquerda(atual); // Rotação simples
+                } else {
+                    atual.direita = rotacionarDireita(atual.direita);
+                    return rotacionarEsquerda(atual); // Rotação dupla
+                }
+            }
+
         }
         return atual;
     }
@@ -110,6 +174,7 @@ public class BinarySearchTree {
         }
         return minimo;
     }
+
 
     public int getValorRaiz() {
         if (this.raiz == null) {
@@ -155,4 +220,69 @@ public class BinarySearchTree {
         }
     }
 
+    public void exibirComoDesenho() {
+        int altura = raiz == null ? 0 : raiz.getAltura() + 1;
+        if (altura == 0) {
+            System.out.println("Árvore vazia.");
+            return;
+        }
+
+        List<Node> nivelAtual = new ArrayList<>();
+        nivelAtual.add(raiz);
+
+        int larguraMax = (int) Math.pow(2, altura) * 4; // Espaçamento dinâmico
+
+        System.out.println("\n--- Visualização Gráfica da Árvore ---");
+
+        for (int i = 0; i < altura; i++) {
+            List<Node> proximoNivel = new ArrayList<>();
+            int espacoEntre = larguraMax / (int) Math.pow(2, i);
+
+            // Imprime espaços iniciais
+            imprimirEspacos(espacoEntre / 2);
+
+            for (Node no : nivelAtual) {
+                if (no != null) {
+                    System.out.print(String.format("%2d", no.valor));
+                    proximoNivel.add(no.esquerda);
+                    proximoNivel.add(no.direita);
+                } else {
+                    System.out.print("--"); // Representa nó vazio
+                    proximoNivel.add(null);
+                    proximoNivel.add(null);
+                }
+                imprimirEspacos(espacoEntre - 2);
+            }
+            System.out.println("\n");
+            nivelAtual = proximoNivel;
+        }
+        System.out.println("--------------------------------------");
     }
+
+    private void imprimirEspacos(int quantidade) {
+        for (int i = 0; i < quantidade; i++) System.out.print(" ");
+    }
+
+    private void desenharArvore(Node no, String prefixo, boolean eUltimo) {
+        if (no != null) {
+            System.out.print(prefixo);
+
+            // Identificador de galho
+            System.out.print(eUltimo ? "└── " : "├── ");
+
+            // Exibe Valor, Fator de Equilíbrio e Altura para conferência do balanceamento
+            System.out.println(no.valor + " (FE: " + no.getFatorEquilibrio() + " | Alt: " + no.getAltura() + ")");
+
+            // Prefixo para os filhos
+            String novoPrefixo = prefixo + (eUltimo ? "    " : "│   ");
+
+            // Desenha os filhos (Direita primeiro para o visual ficar mais natural no console)
+            // Se houver algum filho, precisamos processar ambos para manter a indentação
+            if (no.esquerda != null || no.direita != null) {
+                desenharArvore(no.direita, novoPrefixo, no.esquerda == null);
+                desenharArvore(no.esquerda, novoPrefixo, true);
+            }
+        }
+    }
+
+}

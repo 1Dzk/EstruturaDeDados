@@ -20,4 +20,9 @@ public class Node {
         this.esquerda = null;
         this.direita = null;
     }
+    public int getFatorEquilibrio() {
+        int altEsq = (esquerda == null) ? -1 : esquerda.getAltura();
+        int altDir = (direita == null) ? -1 : direita.getAltura();
+        return altEsq - altDir;
+    }
 }
