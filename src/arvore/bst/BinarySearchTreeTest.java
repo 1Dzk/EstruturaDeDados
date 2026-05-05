@@ -147,4 +147,13 @@ class BinarySearchTreeTest {
         arvore.caminhar(TipoCaminho.PRE_ORDER);  // Esperado: 44 33 22 25 55 52
         arvore.caminhar(TipoCaminho.POS_ORDER);  // Esperado: 25 22 33 52 55 44
     }
+
+    @Test
+    void testeDesenhoGrafico() {
+        arvore.inserir(23);
+        arvore.inserir(20);
+        arvore.inserir(232);
+
+        arvore.exibirComoDesenho();
+    }
 }

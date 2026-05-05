@@ -153,136 +153,135 @@ public class BinarySearchTree {
                 atual.esquerda = rotacionarEsquerda(atual.esquerda);
                 return rotacionarDireita(atual); // Rotação dupla
             }
-            if (fe < -1) {
-                if (atual.direita.getFatorEquilibrio() <= 0) {
-                    return rotacionarEsquerda(atual); // Rotação simples
-                } else {
-                    atual.direita = rotacionarDireita(atual.direita);
-                    return rotacionarEsquerda(atual); // Rotação dupla
-                }
+        }
+        if (fe < -1) {
+            if (atual.direita.getFatorEquilibrio() <= 0) {
+                return rotacionarEsquerda(atual); // Rotação simples
+            } else {
+                atual.direita = rotacionarDireita(atual.direita);
+                return rotacionarEsquerda(atual); // Rotação dupla
             }
-
         }
         return atual;
+}
+
+private int encontrarMinimo(Node no) {
+    int minimo = no.valor;
+    while (no.esquerda != null) {
+        minimo = no.esquerda.valor;
+        no = no.esquerda;
+    }
+    return minimo;
+}
+
+
+public int getValorRaiz() {
+    if (this.raiz == null) {
+        throw new RuntimeException("A árvore está vazia!");
+    }
+    return this.raiz.valor;
+}
+
+public void caminhar(TipoCaminho tipo) {
+    System.out.print("Caminhamento " + tipo + ": ");
+    switch (tipo) {
+        case IN_ORDER -> caminharInOrder(raiz);
+        case PRE_ORDER -> caminharPreOrder(raiz);
+        case POS_ORDER -> caminharPosOrder(raiz);
+    }
+    System.out.println(); // Quebra de linha ao final
+}
+
+// 1. Esquerda -> Raiz -> Direita (Retorna os números em ordem crescente)
+private void caminharInOrder(Node atual) {
+    if (atual != null) {
+        caminharInOrder(atual.esquerda);
+        System.out.print(atual.valor + " ");
+        caminharInOrder(atual.direita);
+    }
+}
+
+// 2. Raiz -> Esquerda -> Direita (Útil para copiar a árvore)
+private void caminharPreOrder(Node atual) {
+    if (atual != null) {
+        System.out.print(atual.valor + " ");
+        caminharPreOrder(atual.esquerda);
+        caminharPreOrder(atual.direita);
+    }
+}
+
+// 3. Esquerda -> Direita -> Raiz (Útil para deletar a árvore ou calcular espaços)
+private void caminharPosOrder(Node atual) {
+    if (atual != null) {
+        caminharPosOrder(atual.esquerda);
+        caminharPosOrder(atual.direita);
+        System.out.print(atual.valor + " ");
+    }
+}
+
+public void exibirComoDesenho() {
+    int altura = raiz == null ? 0 : raiz.getAltura() + 1;
+    if (altura == 0) {
+        System.out.println("Árvore vazia.");
+        return;
     }
 
-    private int encontrarMinimo(Node no) {
-        int minimo = no.valor;
-        while (no.esquerda != null) {
-            minimo = no.esquerda.valor;
-            no = no.esquerda;
-        }
-        return minimo;
-    }
+    List<Node> nivelAtual = new ArrayList<>();
+    nivelAtual.add(raiz);
 
+    int larguraMax = (int) Math.pow(2, altura) * 4; // Espaçamento dinâmico
 
-    public int getValorRaiz() {
-        if (this.raiz == null) {
-            throw new RuntimeException("A árvore está vazia!");
-        }
-        return this.raiz.valor;
-    }
+    System.out.println("\n--- Visualização Gráfica da Árvore ---");
 
-    public void caminhar(TipoCaminho tipo) {
-        System.out.print("Caminhamento " + tipo + ": ");
-        switch (tipo) {
-            case IN_ORDER -> caminharInOrder(raiz);
-            case PRE_ORDER -> caminharPreOrder(raiz);
-            case POS_ORDER -> caminharPosOrder(raiz);
-        }
-        System.out.println(); // Quebra de linha ao final
-    }
+    for (int i = 0; i < altura; i++) {
+        List<Node> proximoNivel = new ArrayList<>();
+        int espacoEntre = larguraMax / (int) Math.pow(2, i);
 
-    // 1. Esquerda -> Raiz -> Direita (Retorna os números em ordem crescente)
-    private void caminharInOrder(Node atual) {
-        if (atual != null) {
-            caminharInOrder(atual.esquerda);
-            System.out.print(atual.valor + " ");
-            caminharInOrder(atual.direita);
-        }
-    }
+        // Imprime espaços iniciais
+        imprimirEspacos(espacoEntre / 2);
 
-    // 2. Raiz -> Esquerda -> Direita (Útil para copiar a árvore)
-    private void caminharPreOrder(Node atual) {
-        if (atual != null) {
-            System.out.print(atual.valor + " ");
-            caminharPreOrder(atual.esquerda);
-            caminharPreOrder(atual.direita);
-        }
-    }
-
-    // 3. Esquerda -> Direita -> Raiz (Útil para deletar a árvore ou calcular espaços)
-    private void caminharPosOrder(Node atual) {
-        if (atual != null) {
-            caminharPosOrder(atual.esquerda);
-            caminharPosOrder(atual.direita);
-            System.out.print(atual.valor + " ");
-        }
-    }
-
-    public void exibirComoDesenho() {
-        int altura = raiz == null ? 0 : raiz.getAltura() + 1;
-        if (altura == 0) {
-            System.out.println("Árvore vazia.");
-            return;
-        }
-
-        List<Node> nivelAtual = new ArrayList<>();
-        nivelAtual.add(raiz);
-
-        int larguraMax = (int) Math.pow(2, altura) * 4; // Espaçamento dinâmico
-
-        System.out.println("\n--- Visualização Gráfica da Árvore ---");
-
-        for (int i = 0; i < altura; i++) {
-            List<Node> proximoNivel = new ArrayList<>();
-            int espacoEntre = larguraMax / (int) Math.pow(2, i);
-
-            // Imprime espaços iniciais
-            imprimirEspacos(espacoEntre / 2);
-
-            for (Node no : nivelAtual) {
-                if (no != null) {
-                    System.out.print(String.format("%2d", no.valor));
-                    proximoNivel.add(no.esquerda);
-                    proximoNivel.add(no.direita);
-                } else {
-                    System.out.print("--"); // Representa nó vazio
-                    proximoNivel.add(null);
-                    proximoNivel.add(null);
-                }
-                imprimirEspacos(espacoEntre - 2);
+        for (Node no : nivelAtual) {
+            if (no != null) {
+                System.out.print(String.format("%2d", no.valor));
+                proximoNivel.add(no.esquerda);
+                proximoNivel.add(no.direita);
+            } else {
+                System.out.print("--"); // Representa nó vazio
+                proximoNivel.add(null);
+                proximoNivel.add(null);
             }
-            System.out.println("\n");
-            nivelAtual = proximoNivel;
+            imprimirEspacos(espacoEntre - 2);
         }
-        System.out.println("--------------------------------------");
+        System.out.println("\n");
+        nivelAtual = proximoNivel;
     }
+    System.out.println("--------------------------------------");
+}
 
-    private void imprimirEspacos(int quantidade) {
-        for (int i = 0; i < quantidade; i++) System.out.print(" ");
-    }
+private void imprimirEspacos(int quantidade) {
+    for (int i = 0; i < quantidade; i++) System.out.print(" ");
+}
 
-    private void desenharArvore(Node no, String prefixo, boolean eUltimo) {
-        if (no != null) {
-            System.out.print(prefixo);
+private void desenharArvore(Node no, String prefixo, boolean eUltimo) {
+    if (no != null) {
+        System.out.print(prefixo);
 
-            // Identificador de galho
-            System.out.print(eUltimo ? "└── " : "├── ");
+        // Identificador de galho
+        System.out.print(eUltimo ? "└── " : "├── ");
 
-            // Exibe Valor, Fator de Equilíbrio e Altura para conferência do balanceamento
-            System.out.println(no.valor + " (FE: " + no.getFatorEquilibrio() + " | Alt: " + no.getAltura() + ")");
+        // Exibe Valor, Fator de Equilíbrio e Altura para conferência do balanceamento
+        System.out.println(no.valor + " (FE: " + no.getFatorEquilibrio() + " | Alt: " + no.getAltura() + ")");
 
-            // Prefixo para os filhos
-            String novoPrefixo = prefixo + (eUltimo ? "    " : "│   ");
+        // Prefixo para os filhos
+        String novoPrefixo = prefixo + (eUltimo ? "    " : "│   ");
 
-            // Desenha os filhos (Direita primeiro para o visual ficar mais natural no console)
-            // Se houver algum filho, precisamos processar ambos para manter a indentação
-            if (no.esquerda != null || no.direita != null) {
-                desenharArvore(no.direita, novoPrefixo, no.esquerda == null);
-                desenharArvore(no.esquerda, novoPrefixo, true);
-            }
+        // Desenha os filhos (Direita primeiro para o visual ficar mais natural no console)
+        // Se houver algum filho, precisamos processar ambos para manter a indentação
+        if (no.esquerda != null || no.direita != null) {
+            desenharArvore(no.direita, novoPrefixo, no.esquerda == null);
+            desenharArvore(no.esquerda, novoPrefixo, true);
         }
     }
+}
 
 }
