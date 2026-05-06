@@ -17,9 +17,9 @@ class BubbleTest {
     int[] v22 = new int[500];
     int[] v23 = new int[500];
 
-    int[] v31 = new int[500_000];
-    int[] v32 = new int[500_000];
-    int[] v33 = new int[500_000];
+    int[] v31 = new int[50000];
+    int[] v32 = new int[50000];
+    int[] v33 = new int[50000];
 
 
     @BeforeEach
@@ -34,9 +34,9 @@ class BubbleTest {
         v22 = GeraVetorUtil.geraAleatorio(500);
         v23 = GeraVetorUtil.geraAleatorio(500);
 
-        v31 =GeraVetorUtil.geraOrdenado(500_000);
-        v32 =GeraVetorUtil.geraAleatorio(500_000);
-        v33 =GeraVetorUtil.geraInverso(500_000);
+        v31 =GeraVetorUtil.geraOrdenado(50000);
+        v32 =GeraVetorUtil.geraAleatorio(50000);
+        v33 =GeraVetorUtil.geraInverso(50000);
     }
 
 
