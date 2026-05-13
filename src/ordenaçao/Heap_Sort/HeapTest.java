@@ -33,7 +33,7 @@ class HeapTest {
     }
 
     @Test
-    void testHeapOrdenado() {
+    void testHeapOrdenado() { // Tempo de execução: 8,46 ms
         int[] resultado = algoritmo.ordenar(v31.clone(), "v31 (Heap Ordenado)");
 
 
@@ -43,7 +43,7 @@ class HeapTest {
     }
 
     @Test
-    void testHeapAleatorio() {
+    void testHeapAleatorio() { // Tempo de execução: 8,57 ms
         int[] resultado = algoritmo.ordenar(v32.clone(), "v32 (Heap Aleatório)");
 
 
@@ -53,7 +53,7 @@ class HeapTest {
     }
 
     @Test
-    void testHeapInverso() {
+    void testHeapInverso() { // Tempo de execução: 7,64 ms
         int[] resultado = algoritmo.ordenar(v33.clone(), "v33 (Heap Inverso)");
 
 
@@ -63,7 +63,7 @@ class HeapTest {
     }
 
     @Test
-    void testHeapOrdenadoV21() {
+    void testHeapOrdenadoV21() { // Tempo de execução: 0,97 ms
         int[] resultado = algoritmo.ordenar(v21.clone(), "v21 (Heap Ordenado)");
 
 
@@ -73,7 +73,7 @@ class HeapTest {
     }
 
     @Test
-    void testHeapAleatorioV22() {
+    void testHeapAleatorioV22() { // Tempo de execução: 0,28 ms
         int[] resultado = algoritmo.ordenar(v22.clone(), "v22 (Heap Aleatorio)");
 
 
@@ -83,7 +83,7 @@ class HeapTest {
     }
 
     @Test
-    void testHeapInversoV23() {
+    void testHeapInversoV23() { // Tempo de execução: 0,22 ms
         int[] resultado = algoritmo.ordenar(v23.clone(), "v23 (Heap Inverso)");
 
 

@@ -30,15 +30,15 @@ class MergeTest {
     }
 
     @Test
-    void testarV32Aleatorio() {
-        // Testa o aleatório de 50 mil (o teste de fogo)
+    void testarV32Aleatorio() { // Tempo de execução: 10,34 ms
+
         int[] resultado = algoritmo.ordenar(v32, "v32 (Aleatório 50.000)");
 
         assertNotNull(resultado);
 
         assertEquals(50000, resultado.length);
 
-        // Valida se está realmente ordenado
+
         for (
                 int i = 0;
                 i < resultado.length - 1; i++) {
@@ -47,8 +47,8 @@ class MergeTest {
     }
 
     @Test
-    void testarV33Inverso() {
-        // No Merge Sort, o inverso é tão rápido quanto o ordenado
+    void testarV33Inverso() {  // Tempo de execução: 6,75 ms
+
         int[] resultado = algoritmo.ordenar(v33, "v33 (Inverso 50.000)");
 
         for (int i = 0; i < resultado.length - 1; i++) {
@@ -57,8 +57,8 @@ class MergeTest {
     }
 
     @Test
-    void testarV22Aleatorio() {
-        // Teste rápido com 500 elementos
+    void testarV22Aleatorio() { // Tempo de execução: 0,31 ms
+
         int[] resultado = algoritmo.ordenar(v22, "v22 (Aleatório 500)");
 
         for (int i = 0; i < resultado.length - 1; i++) {
@@ -67,10 +67,10 @@ class MergeTest {
     }
 
     @Test
-    void testarV22Inverso(){
-        int [] resultado = algoritmo.ordenar(v22, "v22 (Inverso 500)");
+    void testarV22Inverso() {  // Tempo de execução: 0,30 ms
+        int[] resultado = algoritmo.ordenar(v22, "v22 (Inverso 500)");
 
-        for (int i = 0; i< resultado.length - 1; i++){
+        for (int i = 0; i < resultado.length - 1; i++) {
             assertTrue(resultado[i] <= resultado[i + 1]);
         }
     }

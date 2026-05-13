@@ -34,7 +34,7 @@ class QuickTest {
     }
 
     @Test
-    void testQuickAleatorio() {
+    void testQuickAleatorio() { // Tempo de execução: 5,41 ms
         int[] resultado = algoritmo.ordenar(v32, "v32 (Aleatório)");
         for (int i = 0; i < resultado.length - 1; i++) {
             assertTrue(resultado[i] <= resultado[i + 1]);
@@ -42,7 +42,7 @@ class QuickTest {
     }
 
     @Test
-    void testQuickInverso() {
+    void testQuickInverso() { // Tempo de execução: 7,30 ms
         int[] resultado = algoritmo.ordenar(v32, "v32 (Inverso)");
         for (int i = 0; i < resultado.length - 1; i++) {
             assertTrue(resultado[i] <= resultado[i + 1]);
@@ -50,7 +50,7 @@ class QuickTest {
     }
 
     @Test
-    void testQuickAleatorioV22(){
+    void testQuickAleatorioV22(){ // Tempo de execução: 0,15 ms
         int [] resultado = algoritmo.ordenar(v22,"v22 (Aleatorio)");
         for (int i = 0; i < resultado.length - 1; i++) {
             assertTrue(resultado[i] <= resultado[i + 1]);
@@ -58,7 +58,7 @@ class QuickTest {
     }
 
     @Test
-    void testQuickInversoV22(){
+    void testQuickInversoV22(){ // Tempo de execução: 0,57 ms
         int[] resultado = algoritmo.ordenar(v22,"v22 (Inverso)");
         for (int i = 0; i < resultado.length - 1; i++) {
             assertTrue(resultado[i] <= resultado[i + 1]);
